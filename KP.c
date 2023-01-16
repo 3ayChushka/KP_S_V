@@ -45,7 +45,8 @@ void main()
 		puts("Вывод данных - 2");
 		puts("Поиск по категории - 3");
 		puts("Сортировка - 4");
-		puts("Выход - 5");
+		puts("Изменить данные - 5");
+		puts("Выход - 6");
 		scanf("%d", &z);
 
 		switch (z)
@@ -82,6 +83,7 @@ void main()
 			data_file = read(dr);
 			for (int i = 0; i < data_file; i++)
 			{
+				printf("----------Запись#%d----------\n", i+1);
 				output(dr[i]);
 				printf("\n");
 			}
@@ -141,7 +143,7 @@ void main()
 
 				data_file = read(dr);
 
-				dr2 = (DR*)malloc(sizeof(DR));
+				dr2 = (DR*)malloc(data_file*sizeof(DR));
 				dr2=sort(dr, dr2, data_file, year);
 
 				for (int i = 0; i < data_file; i++)
@@ -152,8 +154,24 @@ void main()
 				}
 			break; 
 			}
+			case 5:
+			{
+				int red_num;
+				printf("Введите номер изменяемой записи\n");
+				scanf("%d", &red_num);
+				red_num--;
+				data_file = read(dr);
+				if (red_num > data_file || red_num < 0) { 
+					printf("Такой записи не существует\n"); 
+					break; 
+				}
+
+				input(dr, red_num);
+				for (int o = 0; o < data_file; o++)
+					write(dr, o);
+			}
 		}
-	} while (z!=5);
+	} while (z!=6);
 }
 
 
@@ -203,7 +221,7 @@ void write(DR* dr, int i)
 
 int read(DR* dr)
 {
-	FILE* ptr_file=fopen("kp.txt", "rt");
+	FILE* ptr_file=fopen("kp.txt", "r");
 	int i = 0;
 
 	while (!feof(ptr_file))
